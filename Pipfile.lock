@@ -1,0 +1,41 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "381451945b49b70cde308f817a0e19ebfc81e3cd85dcc1f7031a5d6da3133ded"
+        },
+        "pipfile-spec": 6,
+        "requires": {
+            "python_version": "3.7"
+        },
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.org/simple",
+                "verify_ssl": true
+            },
+            {
+                "name": "ermin",
+                "url": "http://192.168.1.102/python-packages",
+                "verify_ssl": false
+            }
+        ]
+    },
+    "default": {
+        "metfuncs": {
+            "hashes": [
+                "sha256:d5993786a1db13306a9ab23804d166f9a3ad8f4af5526f33f6bdc142ddc048c3",
+                "sha256:e4c2ae3824d8eda725a4c0c2f394b8df3f6e087fb5d4df6fe59084cb0ec64354"
+            ],
+            "index": "ermin",
+            "version": "==1.0.28"
+        },
+        "paho-mqtt": {
+            "hashes": [
+                "sha256:9feb068e822be7b3a116324e01fb6028eb1d66412bf98595ae72698965cb1cae"
+            ],
+            "index": "pypi",
+            "version": "==1.5.1"
+        }
+    },
+    "develop": {}
+}
