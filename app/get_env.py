@@ -34,3 +34,15 @@ def get_stage():
 
     return stage
 
+
+def get_mqtt_name():
+    '''
+    Added to MQTT messages
+    :return:
+    '''
+    if 'MQTT_NAME' in os.environ:
+        mqtt_name = os.environ['MQTT_NAME']
+    else:
+        mqtt_name = 'DISPLAY_GENERATOR'               # i.e. running in PyCharm
+
+    return mqtt_name

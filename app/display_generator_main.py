@@ -17,9 +17,9 @@ Connected = False   # global variable for the state of the connection
 def connect_mqtt() -> mqttClient:
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
-            print("Connected to MQTT Broker OK")
+            print("connected to MQTT Broker OK")
         else:
-            print("Failed to connect, return code %d\n", rc)
+            print("failed to connect !, return code %d\n", rc)
 
     broker_host = get_env_app.get_mqttd_host()
     broker_port = get_env_app.get_mqttd_port()
@@ -38,11 +38,11 @@ def connect_mqtt() -> mqttClient:
 def on_connect(client, userdata, flags, rc):
     # print('entered on_connect()')
     if rc == 0:
-        print(time.ctime() + " : Connected to MQTT Broker OK")
+        print(time.ctime() + " : connected to MQTT Broker OK")
         global Connected  # Use global variable
         Connected = True  # Signal connection
     else:
-        print("Connection to MQTT Broker failed")
+        print("connection to MQTT Broker failed !")
 
 
 # subscribe to Cumulus Topic to read forecast
@@ -57,19 +57,19 @@ def subscribe(client: mqttClient):
         generate_display_text.process_in_msg(client, display_topic, mqtt_dict)
 
     cumulus_topic = get_env_app.get_cumulus_topic()
-    print('cumulus_topic=' + cumulus_topic.__str__())
+    # print('cumulus_topic=' + cumulus_topic.__str__())
     client.subscribe(cumulus_topic)
     client.on_message = on_message
 
 
 def main():
-    broker_host = get_env_app.get_mqttd_host()
-    broker_port = get_env_app.get_mqttd_port()
+    # broker_host = get_env_app.get_mqttd_host()
+    # broker_port = get_env_app.get_mqttd_port()
     display_topic = get_env_app.get_display_topic()
     cumulus_topic = get_env_app.get_cumulus_topic()
 
-    print('broker_host=' + broker_host.__str__())
-    print('broker_port=' + broker_port.__str__())
+    # print('broker_host=' + broker_host.__str__())
+    # print('broker_port=' + broker_port.__str__())
 
     print('display_topic=' + display_topic.__str__())
     print('cumulus_topic=' + cumulus_topic.__str__())
