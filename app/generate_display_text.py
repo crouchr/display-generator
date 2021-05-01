@@ -57,7 +57,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
 
     # if no alerts, then display local time
     if alert_str == '**':
-        alert_str = time.ctime()
+        alert_str = time.ctime() # TODO - strip the seconds and leading space
 
     line_pressure = 'Barometer:' + pressure.__str__() + \
                    ' ' + presstrend_str
