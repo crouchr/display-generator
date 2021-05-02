@@ -36,9 +36,4 @@ def get_tendency(pressure_trend):
         tendency = 'ERROR'
         forecast = 'ERROR'
 
-
-
-
-
-
     return tendency, forecast

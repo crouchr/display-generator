@@ -35,12 +35,10 @@ def process_in_msg(client, display_topic, mqtt_dict):
     # Burt says to record pressure adjusted to MSL (Mean Sea Level)
     pressure_msl = round(pressure_absolute + mean_sea_level_pressure.msl_k_factor(site_height_m, temp_c), 1)
 
-    # if presstrendval > 0:
-    #     presstrend_str = 'R'
-    # elif presstrendval < 0:
-    #     presstrend_str = 'F'
-    # else:
-    #     presstrend_str = 'S'
+    if presstrendval > 0:
+        presstrend_str = '+'
+    else:
+        presstrend_str = ''
 
     if beaufort == 'F0':
         wind_str = 'F0'
@@ -63,8 +61,8 @@ def process_in_msg(client, display_topic, mqtt_dict):
 
     tendency, pressure_forecast = ptendency.get_tendency(presstrendval)
 
-    line_pressure = pressure_msl.__str__() + 'mb' + \
-                   ' ' + tendency + '->' + pressure_forecast
+    line_pressure = pressure_msl.__str__() + \
+                   ' ' + presstrend_str + presstrendval.__str__() + ' ' + pressure_forecast
 
     line_metrics = temp_c.__str__() + 'C' +\
                    ' ' + humidity.__str__() + '%' + \
