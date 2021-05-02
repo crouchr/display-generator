@@ -1,5 +1,5 @@
 
-
+# forecast can only be 8 chars or less
 def get_tendency(pressure_trend):
     """
     Return a string describing predicted weather based on pressure (mb) trend in last 3 hours
@@ -22,16 +22,16 @@ def get_tendency(pressure_trend):
 
     if pressure_trend <= -0.1 and pressure_trend > -1.5:
         tendency = 'f'
-        forecast = 'Changeable'
+        forecast = 'Change'
     elif pressure_trend <= -1.5 and pressure_trend > -3.5:
         tendency = 'F'
-        forecast = 'F6/7 (12h)'
+        forecast = 'F6-7 12h'
     elif pressure_trend <= -3.5 and pressure_trend > -6.0:
         tendency = 'F!'
-        forecast = 'F6/7/8 (6h)'
+        forecast = 'F6-8 6h'
     elif pressure_trend <= - 6.0:
         tendency = 'F!!'
-        forecast = 'F7/8/9 (3h)'
+        forecast = 'F7-9 3h'
     else:
         tendency = 'ERROR'
         forecast = 'ERROR'
