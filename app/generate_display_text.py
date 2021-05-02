@@ -30,8 +30,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
     # beaufort = 'F6'
 
     # Burt says to record pressure adjusted to MSL (Mean Sea Level)
-    pressure = round(float(pressure_absolute), 1)
-    pressure = pressure + mean_sea_level_pressure.msl_k_factor(site_height_m, temp_c)
+    pressure_msl = round(pressure_absolute + mean_sea_level_pressure.msl_k_factor(site_height_m, temp_c), 1)
 
     if presstrendval > 0:
         presstrend_str = 'R'
@@ -59,7 +58,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
     if alert_str == '**':
         alert_str = time.ctime() # TODO - strip the seconds and leading space
 
-    line_pressure = 'Barometer:' + pressure.__str__() + \
+    line_pressure = 'Barometer:' + pressure_msl.__str__() + \
                    ' ' + presstrend_str
 
     line_metrics = temp_c.__str__() + 'C' +\
