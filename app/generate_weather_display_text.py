@@ -13,7 +13,7 @@ import ptendency
 import moving_list
 
 Forecasts = moving_list.MovingList(7)   # make 7 an env var
-LastForecast = ''
+LastForecast = '---'
 
 def log_display_to_file(pressure_msl, presstrend_str, presstrendval, cumulus_forecast, pressure_forecast, temp_c, dew_point, humidity, rrate, beaufort, wdir, winddeg, gust, line_pressure, line_metrics1, line_metrics2, alert_str):
     """
@@ -54,7 +54,7 @@ def log_display_to_file(pressure_msl, presstrend_str, presstrendval, cumulus_for
     fp_out.write(log_rec)
     fp_out.close()
 
-    print(log_rec)
+    print(log_rec.rstrip())
 
     return
 
@@ -149,8 +149,9 @@ def process_in_msg(client, display_topic, mqtt_dict):
     line_pressure = pressure_msl.__str__() + \
                    ' ' + presstrend_str + presstrendval.__str__() + ' ' + forecast_changed_str + most_common_forecast_display
 
-    line_metrics1 = temp_c.__str__() +\
-                   ' ' + dew_point.__str__()
+    line_metrics1 = temp_c.__str__() + 'C' +\
+                   ' ' + dew_point.__str__() + 'C' +\
+                    ' ' + humidity.__str__() + '%'
 
     line_metrics2 = rrate.__str__() + \
                    ' ' + wind_str
