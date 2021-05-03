@@ -107,7 +107,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
     else:
         presstrend_str = ''
 
-    if beaufort == 'F0':
+    if beaufort_corrected == 'F0':
         wind_str = 'F0'
     else:
         wind_str = beaufort_corrected + '>' + gust_corrected.lstrip('F') + ' ' + wdir.__str__()
@@ -115,7 +115,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
     # ALERTS
     if temp_c < 0:
         alert_str += 'FREEZE+'
-    if int(beaufort.replace('F', '')) >= 5:
+    if int(gust_corrected.replace('F', '')) >= 5:
         alert_str += 'WIND+'
     if rrate > 0:
         alert_str += 'RAIN+'
