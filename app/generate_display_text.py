@@ -15,7 +15,7 @@ import moving_list
 Forecasts = moving_list.MovingList(7)   # make 7 an env var
 
 
-def log_display_to_file(pressure_msl, presstrend_str, presstrendval, pressure_forecast, temp_c, dew_point, humidity, rrate, beaufort, wdir, winddeg, gust, alert_str):
+def log_display_to_file(pressure_msl, presstrend_str, presstrendval, cumulus_forecast, pressure_forecast, temp_c, dew_point, humidity, rrate, beaufort, wdir, winddeg, gust, alert_str):
     """
     Log the critical variables to file for analysis
     :param pressure_msl:
@@ -44,6 +44,7 @@ def log_display_to_file(pressure_msl, presstrend_str, presstrendval, pressure_fo
         wdir + '\t' + \
         winddeg.__str__() + '\t' + \
         alert_str + '\t' + \
+        cumulus_forecast + '\t' + \
         '\n'
 
     fp_out = open(log_filename, 'a')
@@ -142,7 +143,8 @@ def process_in_msg(client, display_topic, mqtt_dict):
 
     display_text = [line_pressure, line_metrics, line_fcast, line_alert]
 
-    log_display_to_file(pressure_msl, presstrend_str, presstrendval, most_common_forecast,
+    log_display_to_file(pressure_msl, presstrend_str, presstrendval,
+                        cumulus_forecast, most_common_forecast,
                         temp_c, dew_point, humidity, rrate,
                         beaufort_corrected, wdir, winddeg, gust_corrected,
                         alert_str)
