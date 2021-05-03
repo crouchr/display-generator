@@ -22,16 +22,16 @@ def get_tendency(pressure_trend):
 
     if pressure_trend <= -0.1 and pressure_trend > -1.5:
         tendency = 'f'
-        forecast = 'Change'
+        forecast = 'rain'       # was Change
     elif pressure_trend <= -1.5 and pressure_trend > -3.5:
         tendency = 'F'
-        forecast = 'F6-7 12h'
+        forecast = 'F6h12'      # 'F6-7 12h'
     elif pressure_trend <= -3.5 and pressure_trend > -6.0:
         tendency = 'F!'
-        forecast = 'F6-8 6h'
+        forecast = 'F7h6'       # 'F6-8 6h'
     elif pressure_trend <= - 6.0:
         tendency = 'F!!'
-        forecast = 'F7-9 3h'
+        forecast = 'F8h3'       # 'F7-9 3h
     else:
         tendency = 'ERROR'
         forecast = 'ERROR'

@@ -1,6 +1,6 @@
 # common environment non-specific to this app
 # This file can be used in other metminiwx projects
-
+import os
 
 # Use j1900 for live
 def get_mqttd_host():
@@ -42,3 +42,13 @@ def get_cumulus_topic():
     topic = "CumulusMX/Interval"
 
     return topic
+
+
+# Actual wind vane height to allow for multiplier
+def get_vane_height_m():
+    if 'VANE_HEIGHT' in os.environ:
+        vane_height = os.environ['VANE_HEIGHT']
+    else:
+        vane_height = 3.7       # value in Ermin Street
+
+    return vane_height

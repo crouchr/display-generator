@@ -7,11 +7,15 @@ from pprint import pprint
 import ast
 import generate_display_text
 
+# import moving_averages
+
 # generate client ID with pub prefix randomly
 client_id = f'display-generator-{random.randint(0, 100)}'
 print('client_id=' + client_id.__str__())
 
 Connected = False   # global variable for the state of the connection
+
+# Pressure_m_avg = moving_averages.MovingAverage(5)
 
 
 def connect_mqtt() -> mqttClient:
