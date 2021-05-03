@@ -10,9 +10,12 @@ import wind_calibration
 import metfuncs
 
 import ptendency
+import moving_list
+
+Forecasts = moving_list.MovingList(7)   # make 7 an env var
 
 
-def log_display_to_file(pressure_msl, presstrend_str, presstrendval, pressure_forecast, temp_c, dew_point, humidity, rrate, beaufort, wdir, winddeg, alert_str):
+def log_display_to_file(pressure_msl, presstrend_str, presstrendval, pressure_forecast, temp_c, dew_point, humidity, rrate, beaufort, wdir, winddeg, gust, alert_str):
     """
     Log the critical variables to file for analysis
     :param pressure_msl:
@@ -37,6 +40,7 @@ def log_display_to_file(pressure_msl, presstrend_str, presstrendval, pressure_fo
         humidity.__str__() + '\t' + \
         rrate.__str__() + '\t' + \
         beaufort.__str__() + '\t' + \
+        gust.__str__() + '\t' + \
         wdir + '\t' + \
         winddeg.__str__() + '\t' + \
         alert_str + '\t' + \
@@ -65,7 +69,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
 
 
     temp_c = mqtt_dict['temp']
-    forecast = mqtt_dict['zambretti_forecast']
+    cumulus_forecast = mqtt_dict['zambretti_forecast']
     pressure_absolute = mqtt_dict['pressure']
     dew_point = mqtt_dict['dew']
     humidity = mqtt_dict['humidity']
@@ -73,12 +77,17 @@ def process_in_msg(client, display_topic, mqtt_dict):
     wdir = mqtt_dict['wdir']
     winddeg = mqtt_dict['winddeg']
     wind_knots = float(mqtt_dict['wspeed'])     # averaged over 10 mins
+    gust_knots = float(mqtt_dict['wgust'])     # averaged over 10 mins
     rrate = mqtt_dict['rrate']
     presstrendval = mqtt_dict['presstrendval']
 
     wind_knots_corrected = round(wind_speed_multiplier * wind_knots, 1)
     wind_speed_corrected_kph = metfuncs.knots_to_kph(wind_knots_corrected)
     beaufort_corrected = 'F' + metfuncs.kph_to_beaufort(wind_speed_corrected_kph).__str__()
+
+    gust_knots_corrected = round(wind_speed_multiplier * gust_knots, 1)
+    gust_corrected_kph = metfuncs.knots_to_kph(gust_knots_corrected)
+    gust_corrected = 'F' + metfuncs.kph_to_beaufort(gust_corrected_kph).__str__()
 
     # Testing variables
     # temp_c = -1
@@ -96,7 +105,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
     if beaufort == 'F0':
         wind_str = 'F0'
     else:
-        wind_str = beaufort.__str__() + ' ' + wdir.__str__()
+        wind_str = beaufort_corrected + '/' + gust_corrected.lstrip('F') + ' ' + wdir.__str__()
 
     # ALERTS
     if temp_c < 0:
@@ -114,21 +123,29 @@ def process_in_msg(client, display_topic, mqtt_dict):
 
     tendency, pressure_forecast = ptendency.get_tendency(presstrendval)
 
+    # Choose the mode (most common) of the last n values of the pressure_forecast
+    Forecasts.add(pressure_forecast)
+    print('Forecasts=' + Forecasts.get_values().__str__())
+    most_common_forecast = Forecasts.get_most_common()
+    print('most_common_forecast=' + most_common_forecast)
+
     line_pressure = pressure_msl.__str__() + \
-                   ' ' + presstrend_str + presstrendval.__str__() + ' ' + pressure_forecast
+                   ' ' + presstrend_str + presstrendval.__str__() + ' ' + most_common_forecast
 
     line_metrics = temp_c.__str__() +\
                    ' ' + dew_point.__str__() + \
                    ' ' + rrate.__str__() + \
                    ' ' + wind_str
 
-    line_fcast = forecast
-    # line_alert = 'Rain in 34 minutes...'
+    line_fcast = cumulus_forecast
     line_alert = alert_str
 
     display_text = [line_pressure, line_metrics, line_fcast, line_alert]
 
-    log_display_to_file(pressure_msl, presstrend_str, presstrendval, pressure_forecast, temp_c, dew_point, humidity, rrate, beaufort_corrected, wdir, winddeg, alert_str)
+    log_display_to_file(pressure_msl, presstrend_str, presstrendval, most_common_forecast,
+                        temp_c, dew_point, humidity, rrate,
+                        beaufort_corrected, wdir, winddeg, gust_corrected,
+                        alert_str)
 
     msg['msg_type'] = 'DISPLAY_DATA'
     msg['publisher'] = get_env.get_mqtt_name()
@@ -138,6 +155,5 @@ def process_in_msg(client, display_topic, mqtt_dict):
 
     jsonString = json.dumps(msg)
 
-    # print('simulate sent to display_topic=' + display_topic)
     print(jsonString)
     client.publish(display_topic, jsonString)
