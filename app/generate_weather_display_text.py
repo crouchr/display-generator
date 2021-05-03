@@ -124,7 +124,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
 
     # if no alerts, then display local time
     if alert_str == '**':
-        alert_str = time.ctime() # TODO - strip the seconds and leading space
+        alert_str = 'No Alerts'
 
     tendency, pressure_forecast = ptendency.get_tendency(presstrendval)
 
@@ -158,9 +158,10 @@ def process_in_msg(client, display_topic, mqtt_dict):
 
     line_fcast = cumulus_forecast
     line_alert = alert_str
+    line_time = time.ctime()    # TODO - strip the seconds and leading space
 
     #display_text = [line_pressure, line_metrics, line_fcast, line_alert]
-    display_text = [line_pressure, line_metrics1, line_metrics2, line_alert]
+    display_text = [line_pressure, line_metrics1, line_metrics2, line_alert, line_fcast, line_time]
 
     log_display_to_file(pressure_msl, presstrend_str, presstrendval,
                         cumulus_forecast, most_common_forecast,
