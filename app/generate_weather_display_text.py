@@ -13,9 +13,9 @@ import ptendency
 import moving_list
 
 Forecasts = moving_list.MovingList(7)   # make 7 an env var
+LastForecast = ''
 
-
-def log_display_to_file(pressure_msl, presstrend_str, presstrendval, cumulus_forecast, pressure_forecast, temp_c, dew_point, humidity, rrate, beaufort, wdir, winddeg, gust, alert_str):
+def log_display_to_file(pressure_msl, presstrend_str, presstrendval, cumulus_forecast, pressure_forecast, temp_c, dew_point, humidity, rrate, beaufort, wdir, winddeg, gust, line_pressure, line_metrics1, line_metrics2, alert_str):
     """
     Log the critical variables to file for analysis
     :param pressure_msl:
@@ -43,6 +43,9 @@ def log_display_to_file(pressure_msl, presstrend_str, presstrendval, cumulus_for
         gust.__str__() + '\t' + \
         wdir + '\t' + \
         winddeg.__str__() + '\t' + \
+        '"' + line_pressure + '"' + '\t' + \
+        '"' + line_metrics1 + '"' + '\t' + \
+        '"' + line_metrics2 + '"' + '\t' + \
         alert_str + '\t' + \
         cumulus_forecast + '\t' + \
         '\n'
@@ -59,6 +62,7 @@ def log_display_to_file(pressure_msl, presstrend_str, presstrendval, cumulus_for
 # Pure meteorology based
 def process_in_msg(client, display_topic, mqtt_dict):
     msg = {}
+    global LastForecast
 
     site_height_m = 50
     alert_str = '*'
@@ -106,7 +110,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
     if beaufort == 'F0':
         wind_str = 'F0'
     else:
-        wind_str = beaufort_corrected + '/' + gust_corrected.lstrip('F') + ' ' + wdir.__str__()
+        wind_str = beaufort_corrected + '>' + gust_corrected.lstrip('F') + ' ' + wdir.__str__()
 
     # ALERTS
     if temp_c < 0:
@@ -129,24 +133,41 @@ def process_in_msg(client, display_topic, mqtt_dict):
     print('Forecasts=' + Forecasts.get_values().__str__())
     most_common_forecast = Forecasts.get_most_common()
     print('most_common_forecast=' + most_common_forecast)
+    print('LastForecast=' + LastForecast)
+    if most_common_forecast != LastForecast:
+        forecast_changed_str = '*'
+    else:
+        forecast_changed_str = ''
+
+    # forecast in UPPER CASE implies it is STABLE
+    all_same = Forecasts.all_same_value()
+    if all_same:
+        most_common_forecast_display = most_common_forecast.upper()
+    else:
+        most_common_forecast_display = most_common_forecast.lower()
 
     line_pressure = pressure_msl.__str__() + \
-                   ' ' + presstrend_str + presstrendval.__str__() + ' ' + most_common_forecast
+                   ' ' + presstrend_str + presstrendval.__str__() + ' ' + forecast_changed_str + most_common_forecast_display
 
-    line_metrics = temp_c.__str__() +\
-                   ' ' + dew_point.__str__() + \
-                   ' ' + rrate.__str__() + \
+    line_metrics1 = temp_c.__str__() +\
+                   ' ' + dew_point.__str__()
+
+    line_metrics2 = rrate.__str__() + \
                    ' ' + wind_str
 
     line_fcast = cumulus_forecast
     line_alert = alert_str
 
-    display_text = [line_pressure, line_metrics, line_fcast, line_alert]
+    #display_text = [line_pressure, line_metrics, line_fcast, line_alert]
+    display_text = [line_pressure, line_metrics1, line_metrics2, line_alert]
 
     log_display_to_file(pressure_msl, presstrend_str, presstrendval,
                         cumulus_forecast, most_common_forecast,
                         temp_c, dew_point, humidity, rrate,
                         beaufort_corrected, wdir, winddeg, gust_corrected,
+                        line_pressure,
+                        line_metrics1,
+                        line_metrics2,
                         alert_str)
 
     msg['msg_type'] = 'DISPLAY_DATA'
@@ -159,3 +180,5 @@ def process_in_msg(client, display_topic, mqtt_dict):
 
     print(jsonString)
     client.publish(display_topic, jsonString)
+
+    LastForecast = most_common_forecast

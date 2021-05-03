@@ -13,25 +13,25 @@ def get_tendency(pressure_trend):
     # Possibly more info needed - what if pressure is rapidly rising ?
     if pressure_trend >= 0.1:
         tendency = 'r'     # Rising
-        forecast = 'Fair'
+        forecast = 'fair'
         return tendency, forecast
     elif pressure_trend > -0.1:
         tendency = 's'
-        forecast = 'Settled'
+        forecast = 'stdy'   # Settled or Steady
         return tendency, forecast
 
     if pressure_trend <= -0.1 and pressure_trend > -1.5:
         tendency = 'f'
-        forecast = 'rain'       # was Change
+        forecast = 'chng'       # was Change
     elif pressure_trend <= -1.5 and pressure_trend > -3.5:
         tendency = 'F'
-        forecast = 'F6h12'      # 'F6-7 12h'
+        forecast = 'f6h9'      # 'F6-7 12h'
     elif pressure_trend <= -3.5 and pressure_trend > -6.0:
         tendency = 'F!'
-        forecast = 'F7h6'       # 'F6-8 6h'
+        forecast = 'f7h6'       # 'F6-8 6h'
     elif pressure_trend <= - 6.0:
         tendency = 'F!!'
-        forecast = 'F8h3'       # 'F7-9 3h
+        forecast = 'f8h3'       # 'F7-9 3h
     else:
         tendency = 'ERROR'
         forecast = 'ERROR'

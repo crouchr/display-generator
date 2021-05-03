@@ -26,10 +26,27 @@ class MovingList:
     def get_values(self):
         return self.values
 
+    def all_same_value(self):
+        """
+        return True if all the values in self.values are the same
+        :return:
+        """
+        self.list_of_unique_numbers = []
+
+        unique_numbers = set(self.values)
+
+        for number in unique_numbers:
+            self.list_of_unique_numbers.append(number)
+
+        if len(self.values) == self.window_len and len(self.list_of_unique_numbers) == 1:
+            return True
+        else:
+            return False
+
 
 # example usage
 def main():
-    values = ['rain', 'rain', 'sun', 'wind', 'wind', 'wind', 'wind', 'wind', 'hail']
+    values = ['rain', 'rain', 'sun', 'wind', 'wind', 'wind', 'wind', 'wind', 'wind', 'hail']
     window_len = 5
 
     states = MovingList(window_len)
@@ -38,7 +55,10 @@ def main():
         print('---')
         states.add(i)
         print(states.get_values())
-        print(states.get_most_common())
+        most_common = states.get_most_common()
+        print('most_common=' + most_common)
+        all_same = states.all_same_value()
+        print('all_same_value=' + all_same.__str__())
         # moving_avg = s1.get_moving_average()
         # print('moving_average=' + moving_avg.__str__())
 

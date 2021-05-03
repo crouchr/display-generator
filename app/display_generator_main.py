@@ -5,7 +5,7 @@ import paho.mqtt.client as mqttClient
 import get_env_app
 from pprint import pprint
 import ast
-import generate_display_text
+import generate_weather_display_text
 
 # import moving_averages
 
@@ -38,6 +38,7 @@ def connect_mqtt() -> mqttClient:
 
     return client
 
+
 # common funcs
 def on_connect(client, userdata, flags, rc):
     # print('entered on_connect()')
@@ -58,7 +59,7 @@ def subscribe(client: mqttClient):
         mqtt_dict = ast.literal_eval(msg.payload.decode())
         pprint(mqtt_dict)
         display_topic = get_env_app.get_display_topic()
-        generate_display_text.process_in_msg(client, display_topic, mqtt_dict)
+        generate_weather_display_text.process_in_msg(client, display_topic, mqtt_dict)
 
     cumulus_topic = get_env_app.get_cumulus_topic()
     # print('cumulus_topic=' + cumulus_topic.__str__())
