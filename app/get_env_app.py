@@ -8,12 +8,10 @@ def get_mqttd_host():
     Determine the hostname that hosts the MQTT Daemon
     :return:
     """
-    # if 'STAGE' in os.environ and os.environ['STAGE'] == 'PRD':
-    #     mqttd_host = 'j1900'
-    # # elif 'STAGE' in os.environ and os.environ['STAGE'] == 'TEST':
-    # #     mqttd_host = 'mr-dell'
-    # else:
-    mqttd_host = 'j1900'
+    if 'STAGE' in os.environ and os.environ['STAGE'] == 'PRD':
+        mqttd_host = 'mqttd'    # name of container
+    else:
+        mqttd_host = 'j1900'    # IP of mqttd
 
     return mqttd_host
 
