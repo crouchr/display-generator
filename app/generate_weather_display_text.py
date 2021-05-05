@@ -3,6 +3,7 @@ import time
 
 import get_env
 import get_env_app
+import definitions
 
 # artifacts (metfuncs)
 import mean_sea_level_pressure
@@ -30,7 +31,7 @@ def log_display_to_file(pressure_msl, presstrend_str, presstrendval, cumulus_for
     :param alert_str:
     :return:
     """
-    log_filename = 'ptendency.tsv'
+    log_filename = definitions.DISPLAY_ROOT + '/' + 'ptendency.tsv'
     log_rec = time.ctime() + '\t' + \
         pressure_msl.__str__() + '\t' + \
         presstrend_str  + presstrendval.__str__() + '\t' + \
