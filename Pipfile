@@ -13,6 +13,7 @@ paho-mqtt = "==1.5.1"
 metfuncs = {version="1.0.28", index="ermin"}
 pytest = "==6.2.3"
 metpy = "*"
+yoctopuce = "==1.10.44175"
 
 [dev-packages]
 

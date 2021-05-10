@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "901de8883aade77894d047cf3a60b394b02aacfd66836c048b2fb698d4a9accf"
+            "sha256": "dc0ebc28e17aad31615865689ad67c0ee5c47e12c428407d4d4de2fcfaa41ede"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -456,6 +456,13 @@
             ],
             "markers": "python_version >= '3.7'",
             "version": "==0.18.0"
+        },
+        "yoctopuce": {
+            "hashes": [
+                "sha256:ceb53bc938bb22ed36def87b2219c67d54156ed1c3421ec60e273b7f7fc5d2c0"
+            ],
+            "index": "pypi",
+            "version": "==1.10.44175"
         },
         "zipp": {
             "hashes": [
