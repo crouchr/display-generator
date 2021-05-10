@@ -15,6 +15,8 @@ import temp_derived_values
 import simple_fog
 import cloud_base
 
+import moon_phase
+
 import ptendency
 import moving_list
 
@@ -30,6 +32,7 @@ def log_display_to_file(pressure_msl, presstrend_str, presstrendval,
                         fog_str,
                         line_pressure,
                         line_metrics1, line_metrics2, line_metrics3, line_metrics4, line_metrics5, line_metrics6,
+                        line_moon,
                         alert_str):
     """
     Log the critical variables to file for analysis
@@ -119,8 +122,10 @@ def process_in_msg(client, display_topic, mqtt_dict):
     cloud_base_ft = cloud_base.calc_cloud_base_ft(temp_c, humidity)
     print('cloud_base_ft=' + cloud_base_ft.__str__())
 
+    moon_status, light_percent = moon_phase.get_moon_phase_now()
+
     dew_point_c = temp_derived_values.get_dew_point(temp_c, humidity)
-    print('dew_point_c (derived)=' + dew_point_c.__str__())
+    print('dew_point_c=' + dew_point_c.__str__())
     # print('dew_point_cumulus=' + dew_point_cumulus.__str__())
 
     # see https://www.weather.gov/source/zhu/ZHU_Training_Page/thunderstorm_stuff/Thunderstorms/thunderstorms.htm
@@ -196,6 +201,8 @@ def process_in_msg(client, display_topic, mqtt_dict):
     line_pressure = pressure_msl.__str__() + \
                    ' ' + presstrend_str + presstrendval.__str__() + ' ' + forecast_changed_str + most_common_forecast_display
 
+    line_moon = light_percent.__str__() + '%' + ' ' + moon_status
+
     line_metrics1 = temp_c.__str__() + 'C' +\
                    ' ' + dew_point_c.__str__() + 'C' +\
                     ' ' + humidity.__str__() + '%'
@@ -218,6 +225,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
 
     display_text = [line_pressure,
                     line_metrics1, line_metrics2, line_metrics3, line_metrics4, line_metrics5, line_metrics6,
+                    line_moon,
                     line_alert, line_fcast, line_time]
 
     log_display_to_file(pressure_msl, presstrend_str, presstrendval,
@@ -235,6 +243,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
                         line_metrics4,
                         line_metrics5,
                         line_metrics6,
+                        line_moon,
                         alert_str)
 
     msg['msg_type'] = 'DISPLAY_DATA'
