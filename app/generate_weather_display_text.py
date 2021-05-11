@@ -119,8 +119,7 @@ def process_in_msg(client, display_topic, mqtt_dict):
     gust_corrected_kph = metfuncs.knots_to_kph(gust_knots_corrected)
     gust_corrected = 'F' + metfuncs.kph_to_beaufort(gust_corrected_kph).__str__()
 
-    cloud_base_ft = cloud_base.calc_cloud_base_ft(temp_c, humidity)
-    print('cloud_base_ft=' + cloud_base_ft.__str__())
+
 
     moon_status, light_percent = moon_phase.get_moon_phase_now()
 
@@ -141,6 +140,9 @@ def process_in_msg(client, display_topic, mqtt_dict):
         fog_str = 'FOG?'
     else:
         fog_str = 'NO_FOG'
+
+    cloud_base_ft = cloud_base.calc_cloud_base_ft(temp_c, dew_point_c)
+    print('cloud_base_ft=' + cloud_base_ft.__str__())
 
     sunrise = '07:02'
     sunset = '21:29'

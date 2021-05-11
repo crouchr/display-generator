@@ -9,4 +9,3 @@ def calc_cloud_base_ft(temp_c, dew_point_c):
     """
     cloud_base_ft = 1000 * (abs(temp_c - dew_point_c) / 2.5)
     return int(cloud_base_ft)
-
