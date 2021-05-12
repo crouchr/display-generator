@@ -1,15 +1,11 @@
 # See https://www.yoctopuce.com/EN/products/yocto-meteo-v2/doc/METEOMK2.usermanual.html#CHAP5SEC1
-# from yoctopuce.yocto_lightsensor import *
-# from yoctopuce.yocto_api import *
-
-# import os
-# import sys
 
 from yoctopuce.yocto_humidity import *
 from yoctopuce.yocto_temperature import *
 from yoctopuce.yocto_pressure import *
 
 
+# SerialNumber: METEOMK2-18FD45
 def register_meteo2_sensor(target='any'):
     try:
         print('entered register_meteo2_sensor()')
@@ -18,7 +14,8 @@ def register_meteo2_sensor(target='any'):
 
         # Setup the API to use local USB devices
         if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
-            msg = "Error : Meteo sensor init error" + errmsg.value
+            msg = "Error : Meteo sensor init error : " + errmsg.value
+            print(msg)
             return None, None, None, msg
 
         if target == 'any':
@@ -26,6 +23,7 @@ def register_meteo2_sensor(target='any'):
             hum_sensor = YHumidity.FirstHumidity()
             if hum_sensor is None:
                 msg = 'Error : check Meteo sensor USB cable'
+                print(msg)
                 return None, None, None, msg
         else:
             hum_sensor = YHumidity.FindHumidity(target + '.humidity')
@@ -34,6 +32,7 @@ def register_meteo2_sensor(target='any'):
 
         if not (hum_sensor.isOnline()):
             msg = 'Error : Meteo sensor not connected'
+            print(msg)
             return None, None, None, msg
 
         print('Meteo sensor registered OK')
